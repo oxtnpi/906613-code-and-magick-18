@@ -5,6 +5,8 @@
   var userDialogFooter = document.querySelector('.setup-similar');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = document.querySelector('.setup-close');
+  var DEFAULT_TOP_COORDINATE = 80;
+  var DEFAULT_LEFT_COORDINATE = 50;
 
   var openUserDialog = function () {
     userDialog.classList.remove('hidden');
@@ -16,6 +18,11 @@
 
   var openCharacterMenu = function () {
     userDialogFooter.classList.remove('hidden');
+  };
+
+  var getDefaultCoordinate = function () {
+    userDialog.style.top = DEFAULT_TOP_COORDINATE + 'px';
+    userDialog.style.left = DEFAULT_LEFT_COORDINATE + '%';
   };
 
   var onPopupEscPress = function (evt) {
@@ -32,6 +39,7 @@
 
   var closePopup = function () {
     closeUserDialog();
+    getDefaultCoordinate();
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
@@ -44,6 +52,7 @@
   setupClose.addEventListener('click', function (evt) {
     evt.preventDefault();
     closePopup();
+    getDefaultCoordinate();
   });
 
   setupOpen.addEventListener('keydown', function (evt) {
@@ -52,6 +61,8 @@
 
   setupClose.addEventListener('keydown', function (evt) {
     window.util.isEscEvent(evt, closeUserDialog);
+    window.util.isEnterEvent(evt, closeUserDialog);
+    getDefaultCoordinate();
   });
 
   var userNameInput = document.querySelector('.setup-user-name');
