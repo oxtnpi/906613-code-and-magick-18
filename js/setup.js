@@ -1,8 +1,6 @@
 'use strict';
 (function () {
 
-  var NAMES_ARRAY = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var LAST_NAMES_ARRAY = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
   var COAT_COLOR_ARRAY = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
   var EYES_COLOR_ARRAY = ['black', 'red', 'blue', 'yellow', 'green'];
   var CHARACTER_CONST = 4;
@@ -17,35 +15,31 @@
     return Math.floor(Math.random() * (max - min) + min);
   };
 
-  var generateRandomCharacter = function () {
-    return {
-      name: NAMES_ARRAY[getRandomInBounds(0, NAMES_ARRAY.length - 1)] + ' ' + LAST_NAMES_ARRAY[getRandomInBounds(0, LAST_NAMES_ARRAY.length - 1)],
-      coatColor: COAT_COLOR_ARRAY[getRandomInBounds(0, COAT_COLOR_ARRAY.length - 1)],
-      eyesColor: EYES_COLOR_ARRAY[getRandomInBounds(0, EYES_COLOR_ARRAY.length - 1)]
-    };
-  };
-
-  var characterData = [];
-
-  for (var i = 0; i < CHARACTER_CONST; i++) {
-    characterData.push(generateRandomCharacter());
-  }
-
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
 
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
 
     return wizardElement;
   };
 
-  var fragment = document.createDocumentFragment();
-  for (var j = 0; j < characterData.length; j++) {
-    fragment.appendChild(renderWizard(characterData[j]));
-  }
-  similarListElement.appendChild(fragment);
+  var renderCharacters = function (wizards) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < CHARACTER_CONST; i++) {
+      var randomIndex = getRandomInBounds(0, wizards.length - 1);
+      fragment.appendChild(renderWizard(wizards[randomIndex]));
+      wizards.splice(randomIndex, 1);
+    }
+    similarListElement.appendChild(fragment);
+  };
+
+  var onFail = function (err) {
+    window.errorMessage.show(err);
+  };
+
+  window.backend.load(renderCharacters, onFail);
 
   var setupWizard = document.querySelector('.setup-wizard');
 

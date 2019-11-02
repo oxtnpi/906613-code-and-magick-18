@@ -26,6 +26,7 @@
   };
 
   var onPopupEscPress = function (evt) {
+
     if (evt.target.name !== 'username') {
       window.util.isEscEvent(evt, closePopup);
     }
@@ -63,6 +64,19 @@
     window.util.isEscEvent(evt, closeUserDialog);
     window.util.isEnterEvent(evt, closeUserDialog);
     getDefaultCoordinate();
+  });
+
+  var form = userDialog.querySelector('.setup-wizard-form');
+  var onSuccess = function () {
+    userDialog.classList.add('hidden');
+  };
+
+  var onFail = function (err) {
+    window.errorMessage.show(err);
+  };
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), onSuccess, onFail);
+    evt.preventDefault();
   });
 
   var userNameInput = document.querySelector('.setup-user-name');
